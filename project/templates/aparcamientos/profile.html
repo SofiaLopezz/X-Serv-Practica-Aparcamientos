@@ -1,0 +1,50 @@
+
+{% extends "base.html" %}
+
+{% block title %}
+{% if DoesNotExist %}
+El perfil buscado no se encuentra en la base de datos
+{% else %}
+{{usuario.nombre_pagina}}
+{% endif %}
+{% endblock title %}
+
+
+
+{% block texto_central %}
+{% if not DoesNotExist %}
+    {% if user.is_authenticated  %}
+
+    <a href="/usuario/xml/">Ir a la pagina XML del usuario </a>
+
+
+    <form id="style_form" action="/usuario/personaliza/" method ="POST">
+        {% csrf_token %}
+        
+        <span> Selecciona el estilo para <strong>{{user.username}}</strong></span>
+        <input type="hidden" name="color" value="{{usuario.user.username}}">
+        <label for="color"><span class="login_fields">Color de fondo: </span></label> <input id="id_username"  name="color" type="color" value="{{usuario.color}}"/>
+        <label for="size"><span class="login_fields">Tamaño (%):
+        </span></label> <input id="id_password" name="size" type="number" value = "{{usuario.size}}" min="1" max = "100" />
+
+        <span> Selecciona el nombre de la página de <strong>{{user.username}}</strong></span>
+        <label for="color"><span class="login_fields">Nombre: </span></label>
+        <input id="id_username" maxlength="254" name="nombre_pagina" type="text" value="{{usuario.nombre_pagina}}"/>
+        <button type="submit">Enviar</button>
+    </form>
+    {% endif %}
+    <div id="texto_central">
+    <h4>Aparcamientos guardados</h4>
+    <ul id="top_aparcamientos">
+        {% for park in guardados %}
+            <li><a class="enlace_decorado" href="{{park.aparcamiento.url}}">{{park.aparcamiento.nombre}}</a>
+                <span><strong>Dirección:</strong> {{park.aparcamiento.distrito}}, {{park.aparcamiento.barrio}}.
+                <strong>Fecha:</strong> {{park.fecha}}</span>&nbsp<span><a class="enlace_decorado" href="/aparcamientos/{{park.aparcamiento.number}}">
+                    + Info</a>
+                </span>
+            </li>
+        {% endfor %}
+    </ul>
+    </div>
+{% endif %}
+ {% endblock texto_central %}

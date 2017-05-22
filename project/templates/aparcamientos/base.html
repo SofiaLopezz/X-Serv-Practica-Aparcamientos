@@ -1,0 +1,114 @@
+{% load staticfiles %}
+<!-- Plantilla base del sitio web. Esto tendría qe salir en todas las páginas. Banner, formulario login, barra lateral/vertical...-->
+
+<!-- Custom Theme JavaScript -->
+
+<!DOCTYPE html>
+<html>
+<title>Bla Bla PARK - Sofia Lopez</title>
+<link rel="shortcut icon" href='http://www.urbanindy.com/wp-content/uploads/2010/08/Parking_icon.svg_.png'/>
+<head>
+{% block redireccion %}{% endblock redireccion%}
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<link rel="stylesheet" type="text/css" href="{% static 'aparcamientos/style.css'%}"/>
+<link href="https://fonts.googleapis.com/css?family=Barrio" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+<!-- Bootstrap Core CSS -->
+
+<link rel="stylesheet" type="text/css" href="{% static 'aparcamientos/style.css'%}"/>
+
+
+<!-- MetisMenu CSS -->
+<link rel="stylesheet" type="text/css" href="{% static 'js/metisMenu/metisMenu.min.css'%}"/>
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="{% static 'js/datatables-plugins/dataTables.bootstrap.css'%}"/>
+
+<link rel="stylesheet" type="text/css" href="{% static 'js/datatables-responsive/dataTables.responsive.css'%}"/>
+
+<!-- Custom CSS -->
+<link rel="stylesheet" type="text/css" href="{% static 'dist/css/sb-admin-2.css'%}"/>
+
+<!-- Custom Fonts -->
+<link rel="stylesheet" type="text/css" href="{% static 'js/font-awesome/css/font-awesome.min.css'%}"/>
+
+
+
+<!-- jQuery -->
+<script src="{% static 'js/jquery/jquery.min.js' %}"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="{% static 'js//bootstrap/js/bootstrap.min.js' %}"></script>
+
+<!-- Metis Menu Plugin JavaScript -->
+<script src="{% static 'js/metisMenu/metisMenu.min.js' %}"></script>
+
+<!-- DataTables JavaScript -->
+<script src="{% static 'js/datatables/js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'js/datatables-plugins/dataTables.bootstrap.min.js' %}"></script>
+<script src="{% static 'js/datatables-responsive/dataTables.responsive.js' %}"></script>
+
+<script src="{% static 'js/sb-admin-2.js' %}"></script>
+
+
+</head>
+<body>
+<img class="banner" src='{% static "aparcamientos/images/banner.jpg" %}' alt="banner">
+
+{% if user_color %}
+<style>
+  body{
+    color: {{ user_color }};
+    font-size: {{user_size}}em;
+  }
+</style>
+{% endif %}
+
+<!-- Formulario de Login-->
+
+<h1>{%block title %}{% endblock title %}</h1>
+<h2>{% block title2 %}{% endblock title2 %}</h2>
+
+{% if user.is_authenticated %}
+    <div class ="container_corner">
+        <div class="topright">
+            <span id="corner_message"><strong>Bienvenido, </strong>&nbsp<span class="oblicuo">{{user.username}}</span></span>
+            <a href='/logout/'><button id="logged"type="submit">Salir</button></a><br>
+        </div>
+    </div>
+{% else %}
+    <form id="login_form" action="/login/" method ="POST">
+        {% csrf_token %}
+        <label for="id_username"><span class="login_fields">Nick: </span></label> <input id="id_username" maxlength="254" name="username" type="text" />
+        <label for="id_password"><span class="login_fields">Contraseña: </span></label> <input id="id_password" name="password" type="password" />
+        <button type="submit">Login</button>
+    </form>
+{% endif %}
+
+
+
+<!-- Lista horizontal-->
+
+<ul class="list_horizontal">
+  <li><a class="{{inicio}}" href="/">Inicio</a></li>
+  <li><a class="{{park}}" href="/aparcamientos">Todos</a></li>
+  <li><a class="{{personal}}" href="/usuario">Pagina Personal</a></li>
+  <li><a class="{{about}}" href="/about">About</a></li>
+</ul>
+ 
+{% block texto_central %} {% endblock texto_central %}
+
+
+
+<footer class="piepagina">
+    <p>Esta aplicación utiliza datos del portal de datos abiertos de la ciudad de Madrid</p>
+    <a class="piepagina" href="https://goo.gl/kfwrqc">Página al XML</a>
+    <a class="piepagina" href="https://goo.gl/KesL9h">Descripción del XML</a>
+</footer>
+
+
+
+
+</body>
+</html>

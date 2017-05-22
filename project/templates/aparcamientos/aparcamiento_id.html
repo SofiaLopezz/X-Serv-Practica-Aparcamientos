@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+
+{% block title%}
+{% if not DoesNotExist %}
+Información del aparcamiento {{id}}
+{% else %}
+El Aparcamiento solicitado no existe
+{% endif %}
+{% endblock title %}
+
+
+{% block texto_central %}
+{% if not DoesNotExist %}
+
+<div id = "info_aparcamiento">
+    <ul>
+        <li><strong>Nombre:</strong> <span>{{aparcamiento.nombre}}</span></li>
+        <li><strong>Provincia:</strong> <span>{{aparcamiento.provincia}}</span></li>
+        <li> <strong>Barrio:</strong> <span>{{aparcamiento.barrio}}</span></li>
+        <li><strong>Distrito:</strong> <span>{{aparcamiento.distrito}}</span></li>
+        <li><strong>E-mail:</strong> <span>{{aparcamiento.email}}</span></li>
+        <li><strong>Teléfono:</strong> <span>{{aparcamiento.telefono}}</span></li>
+        <li><strong>Accesible:</strong> <span>{{aparcamiento.accesible}}</span></li>
+        <li><strong>Localidad:</strong> <span>{{aparcamiento.localidad}}</span></li>
+        <li><strong>Código Postal:</strong> <span>{{aparcamiento.codigo_postal}}</span></li>
+        <li><strong>Latitud:</strong> <span>{{aparcamiento.latitud}}</span></li>
+        <li><strong>Longitud: </strong> <span>{{aparcamiento.longitud}}</span></li>
+        <li><strong>Descripción: </strong> <span style="font-style:oblique">{{aparcamiento.descripcion}}</span></li>
+        <br>
+    </ul>
+</div>
+
+<div id ="comentarios" style:"">
+    {% if user.is_authenticated  %}
+    <form id="style_form" action="/aparcamientos/{{aparcamiento.id}}/add" method ="POST">
+        {% csrf_token %}
+        <label for="comentario"><span class="login_fields">Introduce un comentario </span></label> <input id="id_username" name="comentario" type="text"/>
+        <button type="submit">Enviar</button>
+    </form>
+    {% endif%}
+    <strong>Comentarios</strong>
+    <ul>
+        {% for comment in comentarios %}
+            <li><span id="comment_user"><strong>{{comment.usuario}}</strong></span> dice: <br>
+                {{comment.texto}} <br> <span id="comment_date">El {{comment.fecha}} </span>
+            </li>
+        {% endfor %}
+    </ul>
+
+</div>
+
+{% endif %}
+{% endblock texto_central %}
