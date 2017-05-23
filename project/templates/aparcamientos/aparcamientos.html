@@ -30,20 +30,34 @@ Info de todos los aparcamientos
                             <th>Nombre</th>
                             <th>Direccion</th>
                             <th>Comentarios</th>
-                            <th></th>      
+                            {% if user.is_authenticated %}
+                                <th>Favorito</th>
+                            {% endif %}      
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
 
                     {% for park in aparcamientos %}
-   
+
+
                         <tr class="odd gradeX">
                             <td><a class="enlace_decorado" href="{{park.url}}">{{park.nombre}}</a></td>
                             <td>{{park.distrito}}, {{park.barrio}}.{{park.provincia}}</td>
-                            <td>{{park.num_coment}}</td>
-                            <td><a class="enlace_decorado" href="/aparcamientos/{{park.id}}"> + Info</a></td>
+                            <td>{{park.num_coment}}</td>                                
+                            {% if user.is_authenticated %}
+                                <td>
+                                    {% if park.favorito %}
+                                        <a class="btn btn-danger" href="/aparcamientos/{{park.id}}/removefavorito">Quitar favorito</a>
+                                    {% else %}
+                                        <a class="btn btn-success" href="/aparcamientos/{{park.id}}/addfavorito">Añadir a favoritos</a>
+                                    {% endif%}
+                                </td>
+                            {% endif %}  
+                            <td><a class="enlace_decorado" href="/aparcamientos/{{park.id}}"> + Info</a></td>          
 
-                        </tr>
+                            </tr>
+  
                         
                     {% endfor %}
                     </tbody>

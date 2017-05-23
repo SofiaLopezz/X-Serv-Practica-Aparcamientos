@@ -1,0 +1,59 @@
+
+{% extends "base.html" %}
+
+{% block title %}
+Pagina de {{usuario.usuario.username}} 
+{% endblock title %}
+
+
+
+{% block texto_central %}
+    <a href="/usuario/xml/">Ir a la pagina XML del usuario </a>
+
+
+
+    <div id="texto_central">
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Aparcamientos guardados por {{usuario.usuario.username}}
+            </div>
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nombre</th>
+                                <th>Direccion</th>
+                                <th></th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                        	{% if aparcamientos %}
+	                            {% for park in aparcamientos %}
+	                            <tr>
+	                                <td></td>
+	                                <td><a href="{{park.aparcamiento.url}}">{{park.nombre}}</a></td>
+	                                <td><strong>Dirección:</strong> {{park.distrito}}, {{park.barrio}}</td>                             
+	                                <td><a class="enlace_decorado" href="/aparcamientos/{{park.id}}">
+	                    + Info</a></td>
+	                            </tr>
+	                            {% endfor %}
+	                        {% else %}
+	                        	<tr>
+	                                <td colspan=4>Este menda va en el coche de san fernando</td>
+	                            </tr>
+	                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.table-responsive -->
+            </div>
+            <!-- /.panel-body -->
+        </div>
+    </div>
+
+ {% endblock texto_central %}

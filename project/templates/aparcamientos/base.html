@@ -11,12 +11,12 @@
 {% block redireccion %}{% endblock redireccion%}
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-<link rel="stylesheet" type="text/css" href="{% static 'aparcamientos/style.css'%}"/>
+
 <link href="https://fonts.googleapis.com/css?family=Barrio" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 <!-- Bootstrap Core CSS -->
-
 <link rel="stylesheet" type="text/css" href="{% static 'aparcamientos/style.css'%}"/>
+
 
 
 <!-- MetisMenu CSS -->
@@ -56,11 +56,11 @@
 <body>
 <img class="banner" src='{% static "aparcamientos/images/banner.jpg" %}' alt="banner">
 
-{% if user_color %}
+{% if user.is_authenticated %}
 <style>
   body{
-    color: {{ user_color }};
-    font-size: {{user_size}}em;
+    color: {{ user.usuario.color }};
+    font-size: {{user.usuario.size}}em;
   }
 </style>
 {% endif %}
@@ -93,7 +93,10 @@
 <ul class="list_horizontal">
   <li><a class="{{inicio}}" href="/">Inicio</a></li>
   <li><a class="{{park}}" href="/aparcamientos">Todos</a></li>
+  {% if user.is_authenticated  %}
   <li><a class="{{personal}}" href="/usuario">Pagina Personal</a></li>
+  {% endif %}
+  <li><a class="{{comunidad}}" href="/aparcamientos/comunidad">Comunidad</a></li>
   <li><a class="{{about}}" href="/about">About</a></li>
 </ul>
  

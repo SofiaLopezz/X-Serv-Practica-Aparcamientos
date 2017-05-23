@@ -89,7 +89,7 @@ def check_data_base():
 Página principal del sitio: devuelvo el banner, formulario de login o mensaje de bienvenida.
 Devuelvo el menu horizontal y vertical y la lista de los 5 aparcamientos con más comentarios
 """
-#@login_required
+
 @csrf_exempt
 def Principal(request):
   context = {}
@@ -223,9 +223,13 @@ def aparcamientos_todos(request):
         # aparcamiento = Aparcamiento.objects.all()
       
         # Dame todos los aparcamientos. Dame el contador de comentarios de cada uno. Ordenalos por numero de comentarios. Excluye los que no tengan comentarios.
-        aparcamiento = Aparcamiento.objects.annotate(num_coment = Count('comentarios'))
-
-
+        aparcamiento = Aparcamiento.objects.annotate(
+            num_coment = Count('comentarios')
+        )
+        if request.user.is_authenticated:
+          for park in aparcamiento:
+              park.favorito = len(park.usuarios.filter(usuario=request.user)) > 0
+               
         context['aparcamientos'] = aparcamiento
 
     elif request.method == 'POST':
@@ -246,6 +250,31 @@ def aparcamientos_todos(request):
 
 
 """
+Cuando recibo un LOGIN: si el método es POST, compruebo si el nick y password coinciden con la base de datos. Si lo hacen, debería autenticar al usuario, usar
+el login ese de las diapos, no se como. Si falla, no lo autentico. En cualquier caso, aunque el método sea invalido, redireccion a la pagina principal
+"""
+def add_favorito(request, id):
+    user=request.user
+    if user:
+        aparcamiento = Aparcamiento.objects.filter(pk=id).first()
+        if aparcamiento:
+
+          aparcamiento.usuarios.add(user.usuario)
+
+    return redirect('/aparcamientos/')
+
+
+def remove_favorito(request, id):
+    user=request.user
+    if user:
+        aparcamiento = Aparcamiento.objects.filter(pk=id).first()
+        if aparcamiento:
+
+          aparcamiento.usuarios.remove(user.usuario)
+          
+    return redirect('/aparcamientos/')
+
+"""
 Página de un usuario determinado: mostrar aparcamientos seleccionados por ese usuario, de 5 en 5
 Comprobar si el usuario existe. Si existe, comprobar si tiene un estilo asociado. Si lo tiene, devolverle el estilo. Si no, le ponemos el
 estandar (negro,1em)
@@ -256,11 +285,22 @@ def personal(request):
   context = {}
 
   usuario = request.user.usuario
-
-  context['user'] = request.user
+  user = request.user
+  context['user'] = user
   context['usuario'] = usuario
   context['personal'] = 'active'
 
+  aparcamientos = None
+  if user:
+    # Para niños
+    aparcamiento = Aparcamiento.objects.filter(usuarios__usuario=user)
+    # Para los mayores
+    aparcamientos = user.usuario.aparcamientos.all()
+
+
+
+
+  context['aparcamientos'] = aparcamientos
 
   if request.method == 'GET':
     pass
@@ -314,3 +354,33 @@ def user_xml(request):
     user_serialized_xml = serializers.serialize("xml", Usuario.objects.all())
     context['user_serialized_xml'] = user_serialized_xml
     return render_to_response('profile_xml.html', context)
+
+
+"""
+Página de la comunidad
+"""
+
+def comunidad(request):
+  context = {}
+  context['user']=request.user
+  context['comunidad'] = Usuario.objects.all().annotate(num_park=Count('aparcamientos'))
+
+  return render_to_response('comunidad.html', context)
+
+
+"""
+Página de un usuario 
+"""
+
+def profileguay(request, username):
+  context = {}
+  context['user']=request.user
+  usuariodelquequierolapagina =  Usuario.objects.filter(usuario__username=username).first()
+  aparcamientos = usuariodelquequierolapagina.aparcamientos.all()
+
+  context['usuario'] = usuariodelquequierolapagina
+  context['aparcamientos'] = aparcamientos
+
+  context['comunidad'] = Usuario.objects.all().annotate(num_park=Count('aparcamientos'))
+
+  return render_to_response('profileguay.html', context)
