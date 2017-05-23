@@ -80,11 +80,6 @@ def check_data_base():
     return None
 
 
-
-
-
-
-
 """
 Página principal del sitio: devuelvo el banner, formulario de login o mensaje de bienvenida.
 Devuelvo el menu horizontal y vertical y la lista de los 5 aparcamientos con más comentarios
@@ -105,8 +100,6 @@ def Principal(request):
     top_aparcamientos = Aparcamiento.objects.annotate(num_coment = Count('comentarios')).exclude(num_coment = 0)[:5]
     #aparcamiento = Aparcamiento.objects.annotate(num_coment = Count('comentarios')).exclude(num_coment = 0)[:5]
 
-
-    
   
   #top_aparcamientos = Comentario.objects.all().order_by('-aparcamiento__id').unique()[:5]
   pagina_list = Pagina.objects.all()       
@@ -250,8 +243,7 @@ def aparcamientos_todos(request):
 
 
 """
-Cuando recibo un LOGIN: si el método es POST, compruebo si el nick y password coinciden con la base de datos. Si lo hacen, debería autenticar al usuario, usar
-el login ese de las diapos, no se como. Si falla, no lo autentico. En cualquier caso, aunque el método sea invalido, redireccion a la pagina principal
+Añadir y borrar el aparcamiento de favorito
 """
 def add_favorito(request, id):
     user=request.user
@@ -293,7 +285,7 @@ def personal(request):
   aparcamientos = None
   if user:
     # Para niños
-    aparcamiento = Aparcamiento.objects.filter(usuarios__usuario=user)
+    #aparcamiento = Aparcamiento.objects.filter(usuarios__usuario=user)
     # Para los mayores
     aparcamientos = user.usuario.aparcamientos.all()
 
@@ -350,9 +342,13 @@ Página con el XML de un usuario determinado
 
 def user_xml(request):
     context = {}
+    user = request.user
 
-    user_serialized_xml = serializers.serialize("xml", Usuario.objects.all())
-    context['user_serialized_xml'] = user_serialized_xml
+    #user_serialized_xml = serializers.serialize("xml", Usuario.objects.all())
+    #context['user_serialized_xml'] = user_serialized_xml
+
+    aparcamientos = user.usuario.aparcamientos.all()
+    context['aparcamientos'] = aparcamientos
     return render_to_response('profile_xml.html', context)
 
 

@@ -2,7 +2,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-Pagina de {{usuario.usuario.username}} 
+Estas visitando la pagina de {{usuario.usuario.username}} 
 {% endblock title %}
 
 
@@ -44,7 +44,7 @@ Pagina de {{usuario.usuario.username}}
 	                            {% endfor %}
 	                        {% else %}
 	                        	<tr>
-	                                <td colspan=4>Este menda va en el coche de san fernando</td>
+	                                <td colspan=4>Este usuario no tiene aparcamientos favoritos</td>
 	                            </tr>
 	                        {% endif %}
                         </tbody>
